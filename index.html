@@ -1,0 +1,200 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>streaming</title>
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/black.css" id="theme">
+
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+        <section>
+            <p style="color:grey">streaming</p>
+            <section>
+            </section>
+            <section>
+                <p>continuous flow of data, as opposed to progressive downloads</p>
+                <p style="color:yellow">data is consumed while the transfer is still ongoing</p>
+            </section>
+            <section>
+                <p>data could be anything</p>
+            </section>
+        </section>
+        <section>
+            <section>
+                <img src="content/basic.png"/>
+            </section>
+            <section>
+                <ol>
+                    <li><p>read the source (could be a another stream or file)</p></li>
+                    <li><p>process (adjust resolution, bitrate)</p></li>
+                    <li><p>output a stream</p></li>
+                </ol>
+                <img src="content/process.gif"/>
+            </section>
+
+            <section>
+                <p>codec</p>
+                <p style="color:grey">compression standard</p>
+                <p style="color:grey">eg: H.264, H.265, MP3</p>
+                <p style="color:yellow">composing is more extensive than decomposing</p>
+            </section>
+            <section>
+                <p>container</p>
+                <p style="color:grey">where encoded media is stored</p>
+                <p style="color:grey">eg: .mp4, .flv</p>
+                <p style="color:yellow">a streaming protocol is like a container in transport</p>
+            </section>
+            <section>
+                <p>transcoding</p>
+                <p style="color:grey">changing codec (sometimes on the fly)</p>
+                <p style="color:grey">eg: H.264 to VP9</p>
+                <p style="color:yellow">can save storage space & bandwidth</p>
+            </section>
+            <section>
+                <p>transmuxing</p>
+                <p style="color:grey">changing the container format</p>
+                <p style="color:grey">eg 1 (on a file): .flv to .mp4</p>
+                <p style="color:grey">eg 2 (on a stream): RPT to HLS</p>
+                <p style="color:yellow">not as expensive as transcoding</p>
+            </section>
+
+            <section>
+                <p>streaming media servers</p>
+            </section>
+            <section>
+                <p>media servers</p>
+                <p style="color:grey">handle multiple input formats and protocols</p>
+                <p style="color:grey">transcoding, transmuxing, recording</p>
+                <p style="color:grey">multiple output protocols</p>
+                <p style="color:yellow">serverless (if you insist)</p>
+                <br>
+                <p style="color:grey">eg: Wowza, Red5, Transloadit</p>
+            </section>
+        </section>
+        <section>
+            <section>
+                <img src="content/latency-spec.png"/>
+            </section>
+
+            <section>
+                <p>RTP</p>
+                <p style="color:grey">real time transport protocol</p>
+                <br>
+                <p style="color:gray">spec includes a transport protocol</p>
+                <p style="color:yellow">not natively supported by browsers</p>
+            </section>
+            <section>
+                <p style="color:grey">RTP usually works on UDP, and not TCP</p>
+                <img src="content/udp.gif" width="450" height="188"/> <br>
+                <img src="content/tcp.gif" width="450" height="188"/>
+            </section>
+            <section>
+                <p style="color:grey">rtp://myserver.com/path/to/stream</p>
+                <br>
+                <p style="color:grey">session description protocol</p>
+                <pre>
+                    <code data-trim data-noescape class="plaintext">
+                        v=0
+                        o=VideoServer 305419896 9876543210 IN IP4 192.168.0.2
+                        s=VideoStream640x480
+                        t=0 0
+                        c=IN IP4 192.168.0.2
+                        m=video 8000/2 RTP/AVP 96
+                        a=rtpmap:96 H264/90000
+                        a=fmtp:96 packetization-mode=0; profile-level-id=4D4033
+                        a=control:trackID=1
+		            </code>
+                </pre>
+            </section>
+
+            <section>
+                <p style="color:gray">since RTP is hard to work with</p>
+                <p>RTP + a control protocol = RTSP</p>
+                <p style="color:grey">rtsp://myserver.com/path/to/stream</p>
+                <p style="color:gray">no .sdp file is needed</p>
+                <br>
+                <p style="color:yellow">still no browser support</p>
+            </section>
+
+        </section>
+
+        </section>
+        <section>
+            <section>
+                <p>protocols for the web</p>
+                <p style="color:grey">quality at the cost of latency (usually)</p>
+                <p style="color:grey">ideal for the modern web</p>
+                <p style="color:yellow">easier to scale and secure</p>
+            </section>
+
+            <section>
+                <p>Apple HLS</p>
+                <p style="color:grey">HTTP Live Streaming</p>
+                <p style="color:grey">builds 3 buffers on the fly</p>
+                <p style="color:grey">variable buffer lengths for different bandwidths</p>
+                <p style="color:yellow">first proper HTTP streaming protocol</p>
+            </section>
+            <section>
+                <p>MPEG-DASH</p>
+                <p style="color:grey">Dynamic Adaptive Streaming over HTTP</p>
+                <br>
+                <p style="color:grey">open standard</p>
+                <p style="color:grey">increased adoption</p>
+            </section>
+            <section>
+                <p>WebRTC</p>
+                <p style="color:grey">A framework for real time communications</p>
+                <p style="color:grey">peer to peer (or rather browser to browser)</p>
+                <p style="color:yellow">usually a server is needed for browsers to find each other</p>
+            </section>
+        </section>
+        <section>
+            <section>
+                <img src="content/sequence.png"/>
+            </section>
+            <section>
+                <p>basic media server output</p>
+                <p>
+                    <video width="600" height="300" src="output/saul.m3u8" controls></video>
+                </p>
+            </section>
+        </section>
+        <section>
+            <p>Wowza outputs</p>
+            <p>
+                <video width="500" height="250" src="http://192.168.0.10:1935/live/cx-may-test.stream_240p/playlist.m3u8" controls></video>
+                <video width="500" height="250" src="http://192.168.0.10:1935/live/cx-may-test.stream/playlist.m3u8" controls></video>
+            </p>
+        </section>
+        <section>
+            Thanks!
+        </section>
+    </div>
+</div>
+
+<script src="dist/reveal.js"></script>
+<script src="plugin/notes/notes.js"></script>
+<script src="plugin/markdown/markdown.js"></script>
+<script src="plugin/highlight/highlight.js"></script>
+<script>
+    // More info about initialization & config:
+    // - https://revealjs.com/initialization/
+    // - https://revealjs.com/config/
+    Reveal.initialize({
+        hash: true,
+
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+    });
+</script>
+</body>
+</html>
